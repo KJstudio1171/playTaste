@@ -11,74 +11,71 @@ interface SiteHeaderProps {
   currentUser: UserSummary | null;
 }
 
+const NAV_LINKS = [
+  { href: "/", label: "홈", match: (p: string) => p === "/" },
+  { href: "/games", label: "게임", match: (p: string) => p.startsWith("/games") || p === "/search" },
+  { href: "/rankings", label: "랭킹", match: (p: string) => p.startsWith("/rankings") },
+];
+
 export function SiteHeader({ currentUser }: SiteHeaderProps) {
   const pathname = usePathname();
 
-  const links = [
-    { href: "/", label: "홈", active: pathname === "/" },
-    { href: "/games", label: "게임 탐색", active: pathname.startsWith("/games") || pathname === "/search" },
-    { href: "/rankings", label: "랭킹", active: pathname.startsWith("/rankings") },
-  ];
-
   return (
-    <header className="sticky top-0 z-40 border-b border-line bg-[rgba(252,247,241,0.92)] backdrop-blur-xl">
-      <div className="mx-auto max-w-7xl px-4 py-3 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between gap-4 xl:grid xl:grid-cols-[auto_minmax(280px,1fr)_auto_auto] xl:items-center">
-          <Link href="/" className="flex min-w-0 items-center gap-3">
-            <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-accent text-sm font-bold tracking-[0.2em] text-white shadow-[0_12px_26px_rgba(207,107,61,0.28)]">
-              PT
-            </div>
-            <div className="min-w-0">
-              <p className="eyebrow">게임 리뷰 플랫폼</p>
-              <p className="display-title truncate text-2xl font-semibold">playTaste</p>
-            </div>
-          </Link>
+    <header className="sticky top-0 z-40 border-b border-line bg-white/95 backdrop-blur-md">
+      {/* 메인 헤더 */}
+      <div className="mx-auto flex max-w-[1120px] items-center justify-between gap-4 px-4 py-3 sm:px-6 lg:px-8">
+        <Link href="/" className="shrink-0 text-base font-extrabold tracking-[-0.04em] text-foreground">
+          play<span className="text-accent">Taste</span>
+        </Link>
 
-          <div className="hidden xl:block xl:w-full xl:max-w-xl">
-            <Suspense fallback={<div className="input-field h-11 rounded-full" />}>
-              <GlobalSearch />
-            </Suspense>
-          </div>
-
-          <nav className="hidden items-center gap-2 md:flex">
-            {links.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className={`rounded-full px-4 py-2 text-sm font-semibold transition ${
-                  link.active ? "bg-accent-soft text-accent-strong" : "text-muted hover:text-foreground"
-                }`}
-              >
-                {link.label}
-              </Link>
-            ))}
-          </nav>
-
-          {currentUser ? (
-            <Link
-              href={`/users/${currentUser.id}`}
-              className="panel flex shrink-0 items-center gap-3 rounded-full px-3 py-2"
-            >
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-accent-soft text-sm font-semibold text-accent-strong">
-                {currentUser.display_name.slice(0, 1)}
-              </div>
-              <div className="hidden text-left sm:block">
-                <p className="text-sm font-semibold">{currentUser.display_name}</p>
-                <p className="text-xs text-muted">@{currentUser.username}</p>
-              </div>
-            </Link>
-          ) : (
-            <Link href="/games" className="button-secondary hidden shrink-0 sm:inline-flex">
-              게임 둘러보기
-            </Link>
-          )}
-        </div>
-
-        <div className="mt-3 xl:hidden">
-          <Suspense fallback={<div className="input-field h-10 rounded-full" />}>
-            <GlobalSearch compact />
+        <div className="hidden max-w-xs flex-1 sm:block lg:max-w-sm">
+          <Suspense fallback={<div className="input-field h-9" />}>
+            <GlobalSearch />
           </Suspense>
         </div>
+
+        {currentUser ? (
+          <Link
+            href={`/users/${currentUser.id}`}
+            className="flex shrink-0 items-center gap-2 rounded-full border border-line px-3 py-1.5 text-sm font-semibold transition hover:border-accent hover:text-accent"
+          >
+            <div className="flex h-6 w-6 items-center justify-center rounded-full bg-accent text-xs font-bold text-white">
+              {currentUser.display_name.slice(0, 1)}
+            </div>
+            <span className="hidden sm:inline">{currentUser.display_name}</span>
+          </Link>
+        ) : (
+          <Link href="/games" className="button-secondary shrink-0 py-1.5 text-sm">
+            게임 둘러보기
+          </Link>
+        )}
+      </div>
+
+      {/* 모바일 검색 */}
+      <div className="border-t border-line px-4 py-2 sm:hidden">
+        <Suspense fallback={<div className="input-field h-9" />}>
+          <GlobalSearch />
+        </Suspense>
+      </div>
+
+      {/* 서브메뉴 탭 */}
+      <div className="mx-auto flex max-w-[1120px] overflow-x-auto px-4 scrollbar-none sm:px-6 lg:px-8">
+        {NAV_LINKS.map((link) => {
+          const active = link.match(pathname);
+          return (
+            <Link
+              key={link.href}
+              href={link.href}
+              className={`shrink-0 border-b-2 px-4 py-2.5 text-sm font-semibold transition ${
+                active
+                  ? "border-accent text-accent"
+                  : "border-transparent text-muted hover:text-foreground"
+              }`}
+            >
+              {link.label}
+            </Link>
+          );
+        })}
       </div>
     </header>
   );
