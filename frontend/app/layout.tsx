@@ -1,13 +1,14 @@
 import type { Metadata } from "next";
 import "./globals.css";
 
+import { MobileBottomNav } from "@/components/mobile-bottom-nav";
 import { SiteHeader } from "@/components/site-header";
 import { fetchBackendJson } from "@/lib/api";
 import type { UserSummary } from "@/lib/types";
 
 export const metadata: Metadata = {
   title: "playTaste",
-  description: "WatchaPedia-inspired game rating and review MVP",
+  description: "게임을 탐색하고 평점과 리뷰를 남기는 playTaste",
 };
 
 export default async function RootLayout({
@@ -28,9 +29,10 @@ export default async function RootLayout({
       <body>
         <div className="page-shell">
           <SiteHeader currentUser={currentUser} />
-          <div className="mx-auto w-full max-w-7xl px-5 pb-16 pt-6 sm:px-8">
+          <div className="mx-auto w-full max-w-7xl px-4 pb-28 pt-5 sm:px-6 md:pb-20 lg:px-8">
             {children}
           </div>
+          <MobileBottomNav />
         </div>
       </body>
     </html>

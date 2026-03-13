@@ -30,22 +30,39 @@ export function RatingStars({
             <button
               key={score}
               type="button"
-              aria-label={`${score} star`}
+              aria-label={`${score}점 주기`}
               disabled={pending}
               onClick={() => onChange?.(score)}
-              className={`transition ${active ? "text-accent" : "text-[#d8b9a4]"} ${pending ? "opacity-60" : "hover:scale-110"}`}
+              className={`transition ${active ? "text-accent" : "text-[#d6b8a3]"} ${pending ? "opacity-60" : "hover:-translate-y-0.5"}`}
             >
-              ★
+              <StarIcon filled={active} />
             </button>
           );
         }
 
         return (
-          <span key={score} className={active ? "text-accent" : "text-[#d8b9a4]"}>
-            ★
+          <span key={score} className={active ? "text-accent" : "text-[#d6b8a3]"}>
+            <StarIcon filled={active} />
           </span>
         );
       })}
     </div>
+  );
+}
+
+function StarIcon({ filled }: { filled: boolean }) {
+  return (
+    <svg
+      aria-hidden="true"
+      viewBox="0 0 24 24"
+      className="h-[1em] w-[1em]"
+      fill={filled ? "currentColor" : "none"}
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth="1.8"
+    >
+      <path d="m12 3.6 2.65 5.37 5.93.86-4.29 4.18 1.01 5.91L12 17.14l-5.3 2.78 1.01-5.91-4.29-4.18 5.93-.86L12 3.6Z" />
+    </svg>
   );
 }

@@ -1,6 +1,6 @@
 export function formatDate(value: string | null) {
   if (!value) {
-    return "TBA";
+    return "출시일 미정";
   }
 
   return new Intl.DateTimeFormat("ko-KR", {

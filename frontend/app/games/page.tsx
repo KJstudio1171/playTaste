@@ -27,7 +27,7 @@ function buildHref(params: { page?: number; q?: string; sort?: string }) {
   if (params.q) {
     searchParams.set("q", params.q);
   }
-  if (params.sort && !params.q) {
+  if (params.sort) {
     searchParams.set("sort", params.sort);
   }
   if (params.page && params.page > 1) {
@@ -46,8 +46,9 @@ export default async function GamesPage({ searchParams }: GamesPageProps) {
     ? resolvedSearchParams.sort!
     : "latest";
   const pageSize = 12;
+  const isSearch = query.length > 0;
 
-  const results = query
+  const results = isSearch
     ? await fetchBackendJson<PaginatedResponse<GameCardType>>(
         `/games/search?q=${encodeURIComponent(query)}&page=${page}&page_size=${pageSize}`,
       )
@@ -58,72 +59,95 @@ export default async function GamesPage({ searchParams }: GamesPageProps) {
   const totalPages = Math.max(Math.ceil(results.total / results.page_size), 1);
 
   return (
-    <main className="space-y-8">
-      <SearchBox initialQuery={query} />
+    <main className="space-y-6">
+      <section className="panel rounded-[32px] p-6 sm:p-8">
+        <div className="flex flex-col gap-6 xl:flex-row xl:items-end xl:justify-between">
+          <div className="max-w-3xl">
+            <p className="eyebrow">{isSearch ? "검색 결과" : "게임 카탈로그"}</p>
+            <h1 className="display-title mt-2 text-4xl font-semibold sm:text-5xl">
+              {isSearch ? `"${query}" 검색 결과` : "지금 플레이할 게임을 골라보세요"}
+            </h1>
+            <p className="mt-3 text-sm leading-7 text-muted">
+              {isSearch
+                ? `${results.total}개의 결과를 찾았어요. 제목, 개발사, 퍼블리셔 이름으로 다시 좁혀볼 수 있어요.`
+                : "최신순, 인기순, 평점순으로 흐름을 바꿔 보면서 마음에 드는 타이틀을 골라보세요."}
+            </p>
+          </div>
 
-      <section className="space-y-5">
-        <div className="panel rounded-[28px] p-6">
-          <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
-            <div>
-              <p className="eyebrow">{query ? "search results" : "game catalog"}</p>
-              <h2 className="display-title mt-2 text-4xl font-semibold">
-                {query ? `"${query}" 검색 결과` : "실제로 탐색 가능한 게임 목록"}
-              </h2>
-              <p className="mt-3 text-sm leading-7 text-muted">
-                {query
-                  ? `${results.total}개의 결과를 찾았습니다. 검색어를 바꾸면 즉시 다시 탐색할 수 있습니다.`
-                  : "최신순, 인기순, 평점순으로 정렬하면서 상세 페이지로 바로 이동할 수 있습니다."}
-              </p>
-            </div>
+          <div className="flex flex-wrap gap-2">
+            {SORT_OPTIONS.map((option) => {
+              if (isSearch) {
+                return (
+                  <span
+                    key={option.value}
+                    className={`rounded-full px-4 py-2 text-sm font-semibold ${
+                      option.value === sort ? "bg-accent-soft text-accent-strong" : "border border-line text-muted"
+                    }`}
+                  >
+                    {option.label}
+                  </span>
+                );
+              }
 
-            {query ? (
-              <Link
-                href="/games"
-                className="rounded-full border border-line px-4 py-2 text-sm font-semibold text-foreground transition hover:border-accent hover:text-accent"
-              >
-                검색 해제
-              </Link>
-            ) : (
-              <div className="flex flex-wrap gap-2">
-                {SORT_OPTIONS.map((option) => {
-                  const active = option.value === sort;
-                  return (
-                    <Link
-                      key={option.value}
-                      href={buildHref({ sort: option.value })}
-                      className={`rounded-full px-4 py-2 text-sm font-semibold transition ${
-                        active
-                          ? "bg-accent text-white"
-                          : "border border-line text-foreground hover:border-accent hover:text-accent"
-                      }`}
-                    >
-                      {option.label}
-                    </Link>
-                  );
-                })}
-              </div>
-            )}
+              const active = option.value === sort;
+              return (
+                <Link
+                  key={option.value}
+                  href={buildHref({ sort: option.value })}
+                  className={`rounded-full px-4 py-2 text-sm font-semibold transition ${
+                    active ? "bg-accent text-white" : "border border-line text-foreground hover:border-accent hover:text-accent-strong"
+                  }`}
+                >
+                  {option.label}
+                </Link>
+              );
+            })}
           </div>
         </div>
 
-        {results.items.length > 0 ? (
-          <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-            {results.items.map((game) => (
-              <GameCard key={game.id} game={game} />
-            ))}
+        <div className="mt-6 grid gap-4 xl:grid-cols-[minmax(0,1fr)_280px]">
+          <SearchBox initialQuery={query} />
+          <div className="rounded-[24px] bg-surface-muted/60 p-5">
+            <p className="text-sm font-semibold text-foreground">
+              {isSearch ? `${results.total}개의 검색 결과` : `총 ${results.total}개의 게임`}
+            </p>
+            <p className="mt-2 text-sm leading-6 text-muted">
+              {isSearch ? "검색 결과는 관련도 기준으로 보여줘요." : "원하는 정렬을 선택해 흐름을 빠르게 바꿔볼 수 있어요."}
+            </p>
+            {isSearch ? (
+              <Link href={buildHref({ sort })} className="button-secondary mt-4 px-4 py-2 text-sm">
+                전체 목록으로 돌아가기
+              </Link>
+            ) : null}
           </div>
-        ) : (
-          <div className="panel rounded-[28px] p-6 text-sm leading-7 text-muted">
-            결과가 없습니다. 다른 제목이나 스튜디오 이름으로 다시 검색해 보세요.
-          </div>
-        )}
+        </div>
       </section>
 
-      <section className="panel flex flex-wrap items-center justify-between gap-4 rounded-[28px] p-5">
+      {results.items.length > 0 ? (
+        <section className="grid grid-cols-2 gap-4 lg:grid-cols-3 xl:grid-cols-4">
+          {results.items.map((game) => (
+            <GameCard key={game.id} game={game} />
+          ))}
+        </section>
+      ) : (
+        <section className="panel rounded-[28px] p-6">
+          <p className="text-base font-semibold">검색 결과가 없어요.</p>
+          <p className="mt-2 text-sm leading-7 text-muted">
+            다른 제목을 시도하거나 개발사 이름으로 다시 찾아보세요. 예: Hades, Nintendo, Atlus
+          </p>
+          <Link href="/games" className="button-secondary mt-5">
+            전체 목록 보기
+          </Link>
+        </section>
+      )}
+
+      <section className="panel flex flex-col gap-4 rounded-[28px] p-5 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <p className="text-sm font-semibold">Page {results.page}</p>
+          <p className="text-sm font-semibold">
+            {results.page} / {totalPages} 페이지
+          </p>
           <p className="mt-1 text-sm text-muted">
-            총 {results.total}개 중 {results.items.length}개 표시, 전체 {totalPages}페이지
+            현재 {results.items.length}개를 보고 있어요. 전체 결과는 {results.total}개입니다.
           </p>
         </div>
         <div className="flex gap-3">
@@ -133,7 +157,7 @@ export default async function GamesPage({ searchParams }: GamesPageProps) {
             className={`rounded-full px-4 py-2 text-sm font-semibold ${
               page <= 1
                 ? "cursor-not-allowed border border-line text-muted opacity-50"
-                : "border border-line text-foreground transition hover:border-accent hover:text-accent"
+                : "border border-line text-foreground transition hover:border-accent hover:text-accent-strong"
             }`}
           >
             이전
@@ -144,7 +168,7 @@ export default async function GamesPage({ searchParams }: GamesPageProps) {
             className={`rounded-full px-4 py-2 text-sm font-semibold ${
               page >= totalPages
                 ? "cursor-not-allowed border border-line text-muted opacity-50"
-                : "bg-accent text-white transition hover:brightness-105"
+                : "bg-accent text-white transition hover:bg-accent-strong"
             }`}
           >
             다음
