@@ -30,10 +30,10 @@ export default async function UserProfilePage({ params }: UserProfilePageProps) 
 
   return (
     <main className="space-y-8">
-      <section className="panel rounded-[32px] p-8">
+      <section className="panel rounded-xl p-6 sm:p-8">
         <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
           <div className="flex items-center gap-5">
-            <div className="flex h-24 w-24 items-center justify-center rounded-[28px] bg-accent-soft text-3xl font-semibold text-accent-strong">
+            <div className="flex h-20 w-20 items-center justify-center rounded-xl bg-accent-soft text-2xl font-bold text-accent">
               {profile.display_name.slice(0, 1)}
             </div>
             <div>
@@ -47,15 +47,15 @@ export default async function UserProfilePage({ params }: UserProfilePageProps) 
           </div>
 
           <div className="grid gap-3 sm:grid-cols-3">
-            <div className="stat-tile rounded-[24px] px-5 py-4">
+            <div className="stat-tile rounded-lg px-4 py-3">
               <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted">평가 수</p>
               <p className="mt-2 text-3xl font-semibold">{profile.stats.rating_count}</p>
             </div>
-            <div className="stat-tile rounded-[24px] px-5 py-4">
+            <div className="stat-tile rounded-lg px-4 py-3">
               <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted">리뷰 수</p>
               <p className="mt-2 text-3xl font-semibold">{profile.stats.review_count}</p>
             </div>
-            <div className="stat-tile rounded-[24px] px-5 py-4">
+            <div className="stat-tile rounded-lg px-4 py-3">
               <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted">평균 준 평점</p>
               <p className="mt-2 text-3xl font-semibold">
                 {profile.stats.average_rating_given ? formatRating(profile.stats.average_rating_given) : "-"}
@@ -74,14 +74,14 @@ export default async function UserProfilePage({ params }: UserProfilePageProps) 
             {profile.recent_ratings.map((entry) => (
               <div key={`${entry.game.id}-${entry.updated_at}`} className="space-y-3">
                 <GameCard game={entry.game} variant="compact" />
-                <div className="rounded-[22px] bg-surface-muted/45 px-4 py-3 text-sm text-muted">
+                <div className="rounded-lg bg-surface-muted px-4 py-2.5 text-sm text-muted">
                   내 별점 <span className="font-semibold text-foreground">{entry.score}.0 / 5</span>
                 </div>
               </div>
             ))}
           </div>
         ) : (
-          <div className="panel rounded-[28px] p-6 text-sm text-muted">아직 남긴 별점이 없어요.</div>
+          <div className="rounded-lg border border-line p-5 text-sm text-muted">아직 남긴 별점이 없어요.</div>
         )}
       </section>
 
@@ -90,7 +90,7 @@ export default async function UserProfilePage({ params }: UserProfilePageProps) 
         {profile.recent_reviews.length > 0 ? (
           <div className="grid gap-4">
             {profile.recent_reviews.map((review) => (
-              <article key={review.id} className="panel rounded-[28px] p-6">
+              <article key={review.id} className="panel rounded-xl p-5">
                 <div className="flex flex-wrap items-center justify-between gap-3">
                   <div>
                     <h3 className="text-lg font-semibold">{review.game.title}</h3>
@@ -102,7 +102,7 @@ export default async function UserProfilePage({ params }: UserProfilePageProps) 
             ))}
           </div>
         ) : (
-          <div className="panel rounded-[28px] p-6 text-sm text-muted">아직 작성한 리뷰가 없어요.</div>
+          <div className="rounded-lg border border-line p-5 text-sm text-muted">아직 작성한 리뷰가 없어요.</div>
         )}
       </section>
     </main>
