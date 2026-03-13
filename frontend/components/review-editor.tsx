@@ -17,12 +17,13 @@ export function ReviewEditor({ gameId, initialReview }: ReviewEditorProps) {
   const [message, setMessage] = useState("");
 
   function saveReview() {
+    const url = initialReview ? `/api/reviews/${initialReview.id}` : `/api/games/${gameId}/reviews`;
     const method = initialReview ? "PUT" : "POST";
     setPending(true);
     setMessage("");
 
     startTransition(async () => {
-      const response = await fetch(`/api/games/${gameId}/review`, {
+      const response = await fetch(url, {
         method,
         headers: {
           "Content-Type": "application/json",
@@ -52,7 +53,7 @@ export function ReviewEditor({ gameId, initialReview }: ReviewEditorProps) {
     setMessage("");
 
     startTransition(async () => {
-      const response = await fetch(`/api/games/${gameId}/review`, {
+      const response = await fetch(`/api/reviews/${initialReview.id}`, {
         method: "DELETE",
       });
 
@@ -74,7 +75,7 @@ export function ReviewEditor({ gameId, initialReview }: ReviewEditorProps) {
       <div className="flex items-center justify-between gap-3">
         <div>
           <p className="eyebrow">your review</p>
-          <h3 className="mt-2 text-xl font-semibold">한 줄 감상이 아니라, 제대로 남기는 리뷰</h3>
+          <h3 className="mt-2 text-xl font-semibold">짧은 감상보다, 제대로 남기는 리뷰</h3>
         </div>
         {initialReview ? (
           <button
@@ -103,7 +104,7 @@ export function ReviewEditor({ gameId, initialReview }: ReviewEditorProps) {
           disabled={pending || draft.trim().length < 5}
           className="rounded-full bg-accent px-5 py-3 text-sm font-semibold text-white transition hover:brightness-105 disabled:cursor-not-allowed disabled:opacity-50"
         >
-          {initialReview ? "Update Review" : "Publish Review"}
+          {initialReview ? "리뷰 수정" : "리뷰 등록"}
         </button>
       </div>
 

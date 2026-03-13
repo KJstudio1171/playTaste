@@ -31,16 +31,14 @@ GAME_LOAD_OPTIONS = (
     selectinload(Game.genre_links).selectinload(GameGenre.genre),
     selectinload(Game.platform_links).selectinload(GamePlatform.platform),
 )
-DETAIL_LOAD_OPTIONS = GAME_LOAD_OPTIONS + (selectinload(Game.reviews).selectinload(Review.user),)
 
 
 def build_base_game_query():
     return select(Game).options(*GAME_LOAD_OPTIONS)
 
 
-def get_game_or_404(db: Session, game_id: int, with_reviews: bool = False) -> Game:
-    load_options = DETAIL_LOAD_OPTIONS if with_reviews else GAME_LOAD_OPTIONS
-    game = db.scalar(select(Game).options(*load_options).where(Game.id == game_id))
+def get_game_or_404(db: Session, game_id: int) -> Game:
+    game = db.scalar(select(Game).options(*GAME_LOAD_OPTIONS).where(Game.id == game_id))
     if game is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Game not found.")
     return game
@@ -174,9 +172,14 @@ def read_game_detail(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ) -> GameDetail:
-    game = get_game_or_404(db, game_id, with_reviews=True)
-    ordered_reviews = sorted(game.reviews, key=lambda item: item.updated_at, reverse=True)
-    game.reviews = ordered_reviews[:8]
+    game = get_game_or_404(db, game_id)
+    latest_reviews = db.scalars(
+        select(Review)
+        .options(selectinload(Review.user))
+        .where(Review.game_id == game_id)
+        .order_by(Review.updated_at.desc())
+        .limit(8)
+    ).all()
 
     my_rating = db.scalar(
         select(Rating.score).where(Rating.game_id == game_id, Rating.user_id == current_user.id)
@@ -187,9 +190,10 @@ def read_game_detail(
         .where(Review.game_id == game_id, Review.user_id == current_user.id)
     )
 
-    return serialize_game_detail(game, my_rating, my_review, reviews=ordered_reviews[:8])
+    return serialize_game_detail(game, my_rating, my_review, reviews=latest_reviews)
 
 
+@router.post("/{game_id}/rating", response_model=RatingMutationResponse, status_code=status.HTTP_201_CREATED)
 @router.put("/{game_id}/rating", response_model=RatingMutationResponse)
 def upsert_rating(
     game_id: int,
@@ -219,6 +223,7 @@ def upsert_rating(
     )
 
 
+@router.post("/{game_id}/reviews", response_model=ReviewMutationResponse, status_code=status.HTTP_201_CREATED)
 @router.post("/{game_id}/review", response_model=ReviewMutationResponse, status_code=status.HTTP_201_CREATED)
 def create_review(
     game_id: int,
@@ -263,7 +268,7 @@ def update_review(
     refresh_game_aggregates(db, game)
     db.commit()
     db.refresh(game)
-    db.refresh(review)
+    review = db.scalar(select(Review).options(selectinload(Review.user)).where(Review.id == review.id))
 
     return ReviewMutationResponse(review=serialize_review(review), review_count=game.review_count)
 

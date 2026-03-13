@@ -8,7 +8,7 @@ export function ReviewFeed({ reviews }: ReviewFeedProps) {
   if (reviews.length === 0) {
     return (
       <div className="panel rounded-[28px] p-6 text-sm text-muted">
-        아직 등록된 리뷰가 없습니다. 첫 리뷰를 남겨서 이 페이지의 분위기를 만들어 보세요.
+        아직 등록된 리뷰가 없습니다. 첫 리뷰를 남겨서 이 게임 페이지의 분위기를 만들어 보세요.
       </div>
     );
   }

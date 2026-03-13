@@ -22,16 +22,16 @@ export function SiteHeader({ currentUser }: SiteHeaderProps) {
 
         <nav className="hidden items-center gap-6 text-sm font-medium text-muted md:flex">
           <Link href="/">Home</Link>
-          <Link href="/search">Search</Link>
+          <Link href="/games">Games</Link>
           <Link href="/rankings">Rankings</Link>
         </nav>
 
         <div className="flex items-center gap-3">
           <Link
-            href="/search"
+            href="/games"
             className="rounded-full border border-line px-4 py-2 text-sm font-medium text-foreground transition hover:border-accent hover:text-accent"
           >
-            Search
+            Browse Games
           </Link>
           {currentUser ? (
             <Link

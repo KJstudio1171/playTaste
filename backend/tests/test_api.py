@@ -14,14 +14,24 @@ def test_search_games(client):
     assert payload["items"][0]["title"] == "Test Quest"
 
 
+def test_list_games_and_rating_rankings_alias(client):
+    games_response = client.get("/api/v1/games", params={"sort": "latest"})
+    rankings_response = client.get("/api/v1/rankings", params={"type": "rating"})
+
+    assert games_response.status_code == 200
+    assert games_response.json()["items"][0]["title"] == "Test Quest"
+    assert rankings_response.status_code == 200
+    assert rankings_response.json()["items"][0]["title"] == "Test Quest"
+
+
 def test_game_detail_includes_my_state(client):
-    rating_response = client.put("/api/v1/games/1/rating", json={"score": 5})
+    rating_response = client.post("/api/v1/games/1/rating", json={"score": 5})
     review_response = client.post(
-        "/api/v1/games/1/review",
+        "/api/v1/games/1/reviews",
         json={"content": "Demo user review content for detail verification."},
     )
 
-    assert rating_response.status_code == 200
+    assert rating_response.status_code == 201
     assert review_response.status_code == 201
 
     detail_response = client.get("/api/v1/games/1")
@@ -34,14 +44,15 @@ def test_game_detail_includes_my_state(client):
 
 def test_review_crud_updates_counts(client):
     create_response = client.post(
-        "/api/v1/games/1/review",
+        "/api/v1/games/1/reviews",
         json={"content": "A fresh review from the demo user."},
     )
+    review_id = create_response.json()["review"]["id"]
     update_response = client.put(
-        "/api/v1/games/1/review",
+        f"/api/v1/reviews/{review_id}",
         json={"content": "An updated review from the demo user."},
     )
-    delete_response = client.delete("/api/v1/games/1/review")
+    delete_response = client.delete(f"/api/v1/reviews/{review_id}")
     detail_response = client.get("/api/v1/games/1")
 
     assert create_response.status_code == 201
@@ -56,7 +67,7 @@ def test_review_crud_updates_counts(client):
 def test_profile_returns_recent_activity(client):
     client.put("/api/v1/games/1/rating", json={"score": 5})
     client.post(
-        "/api/v1/games/1/review",
+        "/api/v1/games/1/reviews",
         json={"content": "Profile page should show this review entry."},
     )
 

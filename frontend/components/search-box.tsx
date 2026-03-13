@@ -31,6 +31,7 @@ export function SearchBox({ initialQuery }: SearchBoxProps) {
         const nextParams = new URLSearchParams(searchParams.toString());
         if (normalized) {
           nextParams.set("q", normalized);
+          nextParams.delete("page");
         } else {
           nextParams.delete("q");
         }
@@ -47,7 +48,7 @@ export function SearchBox({ initialQuery }: SearchBoxProps) {
       <p className="eyebrow">search</p>
       <h1 className="display-title mt-2 text-4xl font-semibold">지금 찾고 싶은 게임</h1>
       <p className="mt-2 text-sm leading-6 text-muted">
-        제목, 개발사, 퍼블리셔 일부만 입력해도 결과를 좁힐 수 있습니다.
+        제목, 개발사, 퍼블리셔 일부만 입력해도 결과를 빠르게 좁힐 수 있습니다.
       </p>
       <input
         value={query}

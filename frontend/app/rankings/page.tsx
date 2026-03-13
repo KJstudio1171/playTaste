@@ -7,7 +7,7 @@ import type { GameCard, PaginatedResponse } from "@/lib/types";
 export const dynamic = "force-dynamic";
 
 export default async function RankingsPage() {
-  const rankings = await fetchBackendJson<PaginatedResponse<GameCard>>("/games/rankings?page_size=20");
+  const rankings = await fetchBackendJson<PaginatedResponse<GameCard>>("/rankings?type=rating&page_size=20");
 
   return (
     <main className="space-y-8">

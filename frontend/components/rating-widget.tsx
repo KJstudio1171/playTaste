@@ -18,13 +18,14 @@ export function RatingWidget({ gameId, initialRating }: RatingWidgetProps) {
 
   function handleRate(score: number) {
     const previous = selected;
+    const method = initialRating === null ? "POST" : "PUT";
     setSelected(score);
     setPending(true);
     setMessage("");
 
     startTransition(async () => {
       const response = await fetch(`/api/games/${gameId}/rating`, {
-        method: "PUT",
+        method,
         headers: {
           "Content-Type": "application/json",
         },
@@ -49,7 +50,7 @@ export function RatingWidget({ gameId, initialRating }: RatingWidgetProps) {
       <p className="eyebrow">your rating</p>
       <h3 className="mt-2 text-xl font-semibold">지금 바로 별점을 남겨보세요</h3>
       <p className="mt-2 text-sm leading-6 text-muted">
-        데모 유저 기준으로 1점부터 5점까지 바로 저장됩니다.
+        데모 유저 기준으로 1점부터 5점까지 즉시 저장됩니다.
       </p>
       <div className="mt-5 flex items-center justify-between gap-4">
         <RatingStars value={selected} interactive pending={pending} onChange={handleRate} size="lg" />

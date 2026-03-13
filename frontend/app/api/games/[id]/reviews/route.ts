@@ -10,10 +10,5 @@ interface RouteContext {
 
 export async function POST(request: NextRequest, { params }: RouteContext) {
   const { id } = await params;
-  return proxyRequest(request, `/games/${id}/rating`);
-}
-
-export async function PUT(request: NextRequest, { params }: RouteContext) {
-  const { id } = await params;
-  return proxyRequest(request, `/games/${id}/rating`);
+  return proxyRequest(request, `/games/${id}/reviews`);
 }

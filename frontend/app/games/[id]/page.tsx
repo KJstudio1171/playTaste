@@ -84,16 +84,20 @@ export default async function GameDetailPage({ params }: GameDetailPageProps) {
             </div>
           </div>
 
-          <RatingWidget gameId={game.id} initialRating={game.my_rating} />
+          <RatingWidget key={`${game.id}-${game.my_rating ?? 0}`} gameId={game.id} initialRating={game.my_rating} />
         </div>
       </section>
 
       <section className="grid gap-6 xl:grid-cols-[0.85fr_1.15fr]">
-        <ReviewEditor gameId={game.id} initialReview={game.my_review} />
+        <ReviewEditor
+          key={`${game.id}-${game.my_review?.id ?? "new"}`}
+          gameId={game.id}
+          initialReview={game.my_review}
+        />
         <div>
           <p className="eyebrow">latest reviews</p>
           <h2 className="display-title mt-3 text-3xl font-semibold">리뷰 중심 레이아웃</h2>
-          <p className="mt-2 mb-5 text-sm leading-7 text-muted">
+          <p className="mb-5 mt-2 text-sm leading-7 text-muted">
             최신 리뷰와 내 리뷰를 나란히 보면서 바로 수정하거나 추가할 수 있습니다.
           </p>
           <ReviewFeed reviews={game.latest_reviews} />
