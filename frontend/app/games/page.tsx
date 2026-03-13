@@ -60,11 +60,11 @@ export default async function GamesPage({ searchParams }: GamesPageProps) {
 
   return (
     <main className="space-y-6">
-      <section className="panel rounded-[32px] p-6 sm:p-8">
+      <section className="rounded-xl border border-line bg-background p-5 sm:p-6">
         <div className="flex flex-col gap-6 xl:flex-row xl:items-end xl:justify-between">
           <div className="max-w-3xl">
             <p className="eyebrow">{isSearch ? "검색 결과" : "게임 카탈로그"}</p>
-            <h1 className="display-title mt-2 text-4xl font-semibold sm:text-5xl">
+            <h1 className="text-2xl font-extrabold tracking-[-0.03em] sm:text-3xl">
               {isSearch ? `"${query}" 검색 결과` : "지금 플레이할 게임을 골라보세요"}
             </h1>
             <p className="mt-3 text-sm leading-7 text-muted">
@@ -80,8 +80,8 @@ export default async function GamesPage({ searchParams }: GamesPageProps) {
                 return (
                   <span
                     key={option.value}
-                    className={`rounded-full px-4 py-2 text-sm font-semibold ${
-                      option.value === sort ? "bg-accent-soft text-accent-strong" : "border border-line text-muted"
+                    className={`rounded-full px-4 py-1.5 text-sm font-semibold ${
+                      option.value === sort ? "bg-accent text-white" : "border border-line text-foreground"
                     }`}
                   >
                     {option.label}
@@ -94,8 +94,8 @@ export default async function GamesPage({ searchParams }: GamesPageProps) {
                 <Link
                   key={option.value}
                   href={buildHref({ sort: option.value })}
-                  className={`rounded-full px-4 py-2 text-sm font-semibold transition ${
-                    active ? "bg-accent text-white" : "border border-line text-foreground hover:border-accent hover:text-accent-strong"
+                  className={`rounded-full px-4 py-1.5 text-sm font-semibold transition ${
+                    active ? "bg-accent text-white" : "border border-line text-foreground hover:border-accent hover:text-accent"
                   }`}
                 >
                   {option.label}
@@ -124,13 +124,13 @@ export default async function GamesPage({ searchParams }: GamesPageProps) {
       </section>
 
       {results.items.length > 0 ? (
-        <section className="grid grid-cols-2 gap-4 lg:grid-cols-3 xl:grid-cols-4">
+        <section className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4">
           {results.items.map((game) => (
             <GameCard key={game.id} game={game} />
           ))}
         </section>
       ) : (
-        <section className="panel rounded-[28px] p-6">
+        <section className="rounded-xl border border-line p-6">
           <p className="text-base font-semibold">검색 결과가 없어요.</p>
           <p className="mt-2 text-sm leading-7 text-muted">
             다른 제목을 시도하거나 개발사 이름으로 다시 찾아보세요. 예: Hades, Nintendo, Atlus
@@ -141,7 +141,7 @@ export default async function GamesPage({ searchParams }: GamesPageProps) {
         </section>
       )}
 
-      <section className="panel flex flex-col gap-4 rounded-[28px] p-5 sm:flex-row sm:items-center sm:justify-between">
+      <section className="flex flex-col gap-4 rounded-xl border border-line p-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <p className="text-sm font-semibold">
             {results.page} / {totalPages} 페이지
