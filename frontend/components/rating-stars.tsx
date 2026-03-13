@@ -33,7 +33,7 @@ export function RatingStars({
               aria-label={`${score}점 주기`}
               disabled={pending}
               onClick={() => onChange?.(score)}
-              className={`transition ${active ? "text-accent" : "text-[#d6b8a3]"} ${pending ? "opacity-60" : "hover:-translate-y-0.5"}`}
+              className={`transition ${active ? "text-accent" : "text-line-strong"} ${pending ? "opacity-60" : "hover:-translate-y-0.5"}`}
             >
               <StarIcon filled={active} />
             </button>
@@ -41,7 +41,7 @@ export function RatingStars({
         }
 
         return (
-          <span key={score} className={active ? "text-accent" : "text-[#d6b8a3]"}>
+          <span key={score} className={active ? "text-accent" : "text-line-strong"}>
             <StarIcon filled={active} />
           </span>
         );

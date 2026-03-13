@@ -56,14 +56,14 @@ export function RatingWidget({ gameId, initialRating }: RatingWidgetProps) {
   }
 
   return (
-    <div className="panel rounded-[30px] p-5 sm:p-6">
+    <div className="panel-featured rounded-xl p-5 sm:p-6">
       <p className="eyebrow">내 별점</p>
       <h3 className="mt-2 text-2xl font-semibold">이 게임, 몇 점인가요?</h3>
       <p className="mt-2 text-sm leading-6 text-muted">
         별을 누르면 바로 저장돼요. 나중에 다시 바꿔도 괜찮아요.
       </p>
 
-      <div className="mt-5 rounded-[24px] bg-surface-muted/60 p-4">
+      <div className="mt-5 bg-accent-soft rounded-lg p-4">
         <RatingStars value={selected} interactive pending={pending} onChange={handleRate} size="lg" />
         <p className="mt-3 text-sm font-semibold text-foreground">
           {selected ? `내 점수 ${selected}.0 / 5` : "아직 내 별점이 없어요."}
