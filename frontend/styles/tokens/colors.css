@@ -1,0 +1,22 @@
+/* === Color Tokens ===
+ * 1-layer: semantic names map directly to raw hex values.
+ * No var() chaining — preserves existing behavior and Tailwind @theme compatibility.
+ */
+:root {
+  --background: #ffffff;
+  --surface: #f9fafb;
+  --surface-muted: #f3f4f6;
+  --foreground: #111827;
+  --muted: #6b7280;
+  --subtle: #9ca3af;
+  --line: #e5e7eb;
+  --line-strong: #d1d5db;
+  --accent: #4f46e5;
+  --accent-hover: #4338ca;
+  --accent-soft: #eef2ff;
+  --accent-mid: #c7d2fe;
+  --danger-bg: #fef2f2;
+  --danger-text: #dc2626;
+  --success-bg: #f0fdf4;
+  --success-text: #16a34a;
+}

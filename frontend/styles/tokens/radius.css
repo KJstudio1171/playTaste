@@ -1,0 +1,9 @@
+/* === Border Radius Tokens === */
+:root {
+  --radius-sm: 6px;       /* .chip, .badge */
+  --radius-md: 8px;       /* .input-field */
+  --radius-lg: 10px;      /* card */
+  --radius-xl: 12px;      /* panel */
+  --radius-2xl: 28px;     /* .panel-featured */
+  --radius-full: 9999px;  /* pill button, avatar */
+}
