@@ -1,6 +1,8 @@
 import Link from "next/link";
 
+import { FilterButton } from "@/components/filter-button";
 import { GameCard } from "@/components/game-card";
+import { Pagination } from "@/components/pagination";
 import { SearchBox } from "@/components/search-box";
 import { fetchBackendJson } from "@/lib/api";
 import type { GameCard as GameCardType, PaginatedResponse } from "@/lib/types";
@@ -75,33 +77,16 @@ export default async function GamesPage({ searchParams }: GamesPageProps) {
           </div>
 
           <div className="flex flex-wrap gap-2">
-            {SORT_OPTIONS.map((option) => {
-              if (isSearch) {
-                return (
-                  <span
-                    key={option.value}
-                    className={`rounded-full px-4 py-1.5 text-sm font-semibold ${
-                      option.value === sort ? "bg-accent text-white" : "border border-line text-foreground"
-                    }`}
-                  >
-                    {option.label}
-                  </span>
-                );
-              }
-
-              const active = option.value === sort;
-              return (
-                <Link
-                  key={option.value}
-                  href={buildHref({ sort: option.value })}
-                  className={`rounded-full px-4 py-1.5 text-sm font-semibold transition ${
-                    active ? "bg-accent text-white" : "border border-line text-foreground hover:border-accent hover:text-accent"
-                  }`}
-                >
-                  {option.label}
-                </Link>
-              );
-            })}
+            {SORT_OPTIONS.map((option) => (
+              <FilterButton
+                key={option.value}
+                active={option.value === sort}
+                href={isSearch ? undefined : buildHref({ sort: option.value })}
+                disabled={isSearch}
+              >
+                {option.label}
+              </FilterButton>
+            ))}
           </div>
         </div>
 
@@ -141,40 +126,23 @@ export default async function GamesPage({ searchParams }: GamesPageProps) {
         </section>
       )}
 
-      <section className="flex flex-col gap-4 rounded-xl border border-line p-4 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <p className="text-sm font-semibold">
-            {results.page} / {totalPages} 페이지
-          </p>
-          <p className="mt-1 text-sm text-muted">
-            현재 {results.items.length}개를 보고 있어요. 전체 결과는 {results.total}개입니다.
-          </p>
-        </div>
-        <div className="flex gap-3">
-          <Link
-            href={buildHref({ page: Math.max(page - 1, 1), q: query || undefined, sort })}
-            aria-disabled={page <= 1}
-            className={`rounded-full px-4 py-2 text-sm font-semibold ${
-              page <= 1
-                ? "cursor-not-allowed border border-line text-muted opacity-50"
-                : "border border-line text-foreground transition hover:border-accent hover:text-accent-strong"
-            }`}
-          >
-            이전
-          </Link>
-          <Link
-            href={buildHref({ page: Math.min(page + 1, totalPages), q: query || undefined, sort })}
-            aria-disabled={page >= totalPages}
-            className={`rounded-full px-4 py-2 text-sm font-semibold ${
-              page >= totalPages
-                ? "cursor-not-allowed border border-line text-muted opacity-50"
-                : "bg-accent text-white transition hover:bg-accent-strong"
-            }`}
-          >
-            다음
-          </Link>
-        </div>
-      </section>
+      <div className="flex items-center justify-between rounded-xl border border-line p-4">
+        <p className="text-sm text-muted">
+          {results.page} / {totalPages} 페이지 · {results.total}개
+        </p>
+        <Pagination
+          page={page}
+          totalPages={totalPages}
+          baseUrl="/games"
+          params={Object.fromEntries(
+            Object.entries({
+              q: query || undefined,
+              // "latest"는 기본값이므로 URL에 포함하지 않음 (기존 buildHref 동작 보존)
+              sort: sort !== "latest" ? sort : undefined,
+            }).filter(([, v]) => v != null)
+          ) as Record<string, string>}
+        />
+      </div>
     </main>
   );
 }

@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 
+import { Badge } from "@/components/badge";
 import { fetchBackendJson } from "@/lib/api";
 import { formatDate, formatRating } from "@/lib/format";
 import type { GameCard, PaginatedResponse } from "@/lib/types";
@@ -61,9 +62,9 @@ export default async function RankingsPage() {
                 </p>
                 <div className="mt-2 flex flex-wrap gap-1">
                   {game.genres.slice(0, 2).map((genre) => (
-                    <span key={genre.id} className="chip bg-accent-soft text-accent">
+                    <Badge key={genre.id} variant="accent">
                       {genre.name}
-                    </span>
+                    </Badge>
                   ))}
                 </div>
               </div>

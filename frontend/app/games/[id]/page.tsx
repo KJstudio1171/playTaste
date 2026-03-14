@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { notFound } from "next/navigation";
 
+import { Badge } from "@/components/badge";
 import { RatingStars } from "@/components/rating-stars";
 import { RatingWidget } from "@/components/rating-widget";
 import { ReviewEditor } from "@/components/review-editor";
@@ -88,14 +89,14 @@ export default async function GameDetailPage({ params }: GameDetailPageProps) {
           {/* 장르/플랫폼 태그 */}
           <div className="flex flex-wrap gap-2">
             {game.genres.map((genre) => (
-              <span key={genre.id} className="chip bg-accent-soft text-accent">
+              <Badge key={genre.id} variant="accent">
                 {genre.name}
-              </span>
+              </Badge>
             ))}
             {game.platforms.map((platform) => (
-              <span key={platform.id} className="chip">
+              <Badge key={platform.id} variant="default">
                 {platform.name}
-              </span>
+              </Badge>
             ))}
           </div>
 

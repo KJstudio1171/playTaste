@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 
+import { Avatar } from "@/components/avatar";
 import { GameCard } from "@/components/game-card";
 import { SectionHeading } from "@/components/section-heading";
 import { fetchBackendResponse } from "@/lib/api";
@@ -33,9 +34,11 @@ export default async function UserProfilePage({ params }: UserProfilePageProps) 
       <section className="panel rounded-xl p-6 sm:p-8">
         <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
           <div className="flex items-center gap-5">
-            <div className="flex h-20 w-20 items-center justify-center rounded-xl bg-accent-soft text-2xl font-bold text-accent">
-              {profile.display_name.slice(0, 1)}
-            </div>
+            <Avatar
+              name={profile.display_name}
+              size="lg"
+              className="rounded-xl bg-accent-soft text-accent"
+            />
             <div>
               <p className="eyebrow">프로필</p>
               <h1 className="display-title mt-2 text-4xl font-semibold sm:text-5xl">{profile.display_name}</h1>
