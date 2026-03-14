@@ -1,28 +1,31 @@
+/* External fonts — must come before @import "tailwindcss" */
 @import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard-dynamic-subset.min.css");
 @import url("https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;800;900&display=swap");
+
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --surface: #f9fafb;
-  --surface-muted: #f3f4f6;
-  --foreground: #111827;
-  --muted: #6b7280;
-  --subtle: #9ca3af;
-  --line: #e5e7eb;
-  --line-strong: #d1d5db;
-  --accent: #4f46e5;
-  --accent-hover: #4338ca;
-  --accent-soft: #eef2ff;
-  --accent-mid: #c7d2fe;
-  --danger-bg: #fef2f2;
-  --danger-text: #dc2626;
-  --success-bg: #f0fdf4;
-  --success-text: #16a34a;
-  --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
-  --shadow-soft: 0 4px 12px rgba(0, 0, 0, 0.08);
-}
+/* Design Tokens
+ * NOTE: In Tailwind v4, @import "tailwindcss" injects Tailwind's layers inline.
+ * Subsequent @imports are appended after Tailwind's output — this is intentional
+ * and correct cascade order (custom tokens override Tailwind defaults).
+ * These imports must still come before @theme inline below. */
+@import "../styles/tokens/colors.css";
+@import "../styles/tokens/shadows.css";
+@import "../styles/tokens/typography.css";
+@import "../styles/tokens/spacing.css";
+@import "../styles/tokens/radius.css";
 
+/* Component CSS */
+@import "../styles/components/panels.css";
+@import "../styles/components/buttons.css";
+@import "../styles/components/forms.css";
+@import "../styles/components/badges.css";
+@import "../styles/components/typography-classes.css";
+
+/* Utilities */
+@import "../styles/utilities.css";
+
+/* Tailwind theme mapping — must come after all @imports */
 @theme inline {
   --color-background: var(--background);
   --color-surface: var(--surface);
@@ -43,6 +46,7 @@
   --font-sans: "Pretendard", "Noto Sans KR", -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
+/* Base styles */
 * {
   box-sizing: border-box;
 }
@@ -78,131 +82,4 @@ textarea::placeholder {
 :where(a, button, input, textarea, select):focus-visible {
   outline: 2px solid color-mix(in srgb, var(--accent) 72%, white 28%);
   outline-offset: 2px;
-}
-
-.page-shell {
-  min-height: 100vh;
-}
-
-/* 카드/패널 기본 스타일 (border + bg + shadow) */
-.panel {
-  border: 1px solid var(--line);
-  background: var(--background);
-  box-shadow: var(--shadow-card);
-}
-
-.panel-featured {
-  border: 1px solid var(--accent-mid);
-  background: var(--accent-soft);
-}
-
-.stat-tile {
-  border: 1px solid var(--line);
-  background: var(--surface);
-}
-
-/* 타이포그래피 */
-.eyebrow {
-  color: var(--accent);
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-}
-
-/* display-title은 제거 — 인라인 Tailwind로 대체 */
-.display-title {
-  letter-spacing: -0.03em;
-}
-
-/* 뱃지/칩 */
-.chip {
-  display: inline-flex;
-  align-items: center;
-  border-radius: 6px;
-  border: 1px solid var(--line);
-  background: var(--surface);
-  padding: 2px 8px;
-  font-size: 11px;
-  font-weight: 500;
-  line-height: 1.6;
-}
-
-/* 버튼 */
-.button-primary {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  border-radius: 9999px;
-  background: var(--accent);
-  color: white;
-  font-size: 0.875rem;
-  font-weight: 600;
-  padding: 8px 20px;
-  transition: background-color 150ms ease, transform 150ms ease;
-}
-
-.button-primary:hover {
-  background: var(--accent-hover);
-}
-
-.button-secondary {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  border-radius: 9999px;
-  border: 1px solid var(--line);
-  background: transparent;
-  color: var(--foreground);
-  font-size: 0.875rem;
-  font-weight: 600;
-  padding: 8px 20px;
-  transition: border-color 150ms ease, color 150ms ease;
-}
-
-.button-secondary:hover {
-  border-color: var(--accent);
-  color: var(--accent);
-}
-
-/* 입력 필드 */
-.input-field {
-  width: 100%;
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  background: var(--surface);
-  color: var(--foreground);
-  padding: 8px 12px;
-  font-size: 0.875rem;
-  transition: border-color 150ms ease, box-shadow 150ms ease;
-}
-
-.input-field:focus {
-  outline: none;
-  border-color: var(--accent);
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 15%, transparent);
-}
-
-/* 상태 뱃지 */
-.status-success {
-  border: 1px solid color-mix(in srgb, var(--success-text) 20%, transparent);
-  background: var(--success-bg);
-  color: var(--success-text);
-}
-
-.status-error {
-  border: 1px solid color-mix(in srgb, var(--danger-text) 20%, transparent);
-  background: var(--danger-bg);
-  color: var(--danger-text);
-}
-
-.scrollbar-none {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
-
-.scrollbar-none::-webkit-scrollbar {
-  display: none;
 }
