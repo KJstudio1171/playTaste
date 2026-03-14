@@ -1,3 +1,4 @@
+import { Avatar } from "@/components/avatar";
 import type { ReviewSummary } from "@/lib/types";
 
 interface ReviewFeedProps {
@@ -26,9 +27,11 @@ export function ReviewFeed({ reviews, highlightReviewId }: ReviewFeedProps) {
           >
             <div className="flex items-start justify-between gap-3">
               <div className="flex items-center gap-3">
-                <div className="flex h-11 w-11 items-center justify-center rounded-full bg-accent-soft text-sm font-semibold text-accent-strong">
-                  {review.user.display_name.slice(0, 1)}
-                </div>
+                <Avatar
+                  name={review.user.display_name}
+                  size="md"
+                  className="bg-accent-soft text-accent"
+                />
                 <div>
                   <div className="flex flex-wrap items-center gap-2">
                     <p className="text-sm font-semibold">{review.user.display_name}</p>

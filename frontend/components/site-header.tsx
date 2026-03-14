@@ -4,6 +4,8 @@ import { Suspense } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
+import { Avatar } from "@/components/avatar";
+import { Tabs, type Tab } from "@/components/tabs";
 import { GlobalSearch } from "@/components/global-search";
 import type { UserSummary } from "@/lib/types";
 
@@ -11,10 +13,10 @@ interface SiteHeaderProps {
   currentUser: UserSummary | null;
 }
 
-const NAV_LINKS = [
-  { href: "/", label: "홈", match: (p: string) => p === "/" },
-  { href: "/games", label: "게임", match: (p: string) => p.startsWith("/games") || p === "/search" },
-  { href: "/rankings", label: "랭킹", match: (p: string) => p.startsWith("/rankings") },
+const NAV_LINKS: Tab[] = [
+  { href: "/", label: "홈", match: (p) => p === "/" },
+  { href: "/games", label: "게임", match: (p) => p.startsWith("/games") || p === "/search" },
+  { href: "/rankings", label: "랭킹", match: (p) => p.startsWith("/rankings") },
 ];
 
 export function SiteHeader({ currentUser }: SiteHeaderProps) {
@@ -39,9 +41,7 @@ export function SiteHeader({ currentUser }: SiteHeaderProps) {
             href={`/users/${currentUser.id}`}
             className="flex shrink-0 items-center gap-2 rounded-full border border-line px-3 py-1.5 text-sm font-semibold transition hover:border-accent hover:text-accent"
           >
-            <div className="flex h-6 w-6 items-center justify-center rounded-full bg-accent text-xs font-bold text-white">
-              {currentUser.display_name.slice(0, 1)}
-            </div>
+            <Avatar name={currentUser.display_name} size="sm" />
             <span className="hidden sm:inline">{currentUser.display_name}</span>
           </Link>
         ) : (
@@ -60,22 +60,7 @@ export function SiteHeader({ currentUser }: SiteHeaderProps) {
 
       {/* 서브메뉴 탭 */}
       <div className="mx-auto flex max-w-[1120px] overflow-x-auto px-4 scrollbar-none sm:px-6 lg:px-8">
-        {NAV_LINKS.map((link) => {
-          const active = link.match(pathname);
-          return (
-            <Link
-              key={link.href}
-              href={link.href}
-              className={`shrink-0 border-b-2 px-4 py-2.5 text-sm font-semibold transition ${
-                active
-                  ? "border-accent text-accent"
-                  : "border-transparent text-muted hover:text-foreground"
-              }`}
-            >
-              {link.label}
-            </Link>
-          );
-        })}
+        <Tabs tabs={NAV_LINKS} activeHref={pathname} />
       </div>
     </header>
   );
