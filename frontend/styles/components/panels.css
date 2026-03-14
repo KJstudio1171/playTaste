@@ -1,0 +1,16 @@
+/* === Panel / Card Components === */
+.panel {
+  border: 1px solid var(--line);
+  background: var(--background);
+  box-shadow: var(--shadow-card);
+}
+
+.panel-featured {
+  border: 1px solid var(--accent-mid);
+  background: var(--accent-soft);
+}
+
+.stat-tile {
+  border: 1px solid var(--line);
+  background: var(--surface);
+}

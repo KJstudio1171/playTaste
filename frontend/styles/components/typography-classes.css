@@ -1,0 +1,12 @@
+/* === Typography Classes === */
+.eyebrow {
+  color: var(--accent);
+  font-size: var(--text-10);  /* 10px — 기존 값 보존 */
+  font-weight: 700;
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+}
+
+.display-title {
+  letter-spacing: var(--tracking-tight);
+}

@@ -1,0 +1,24 @@
+/* === Badge / Chip Components === */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--line);
+  background: var(--surface);
+  padding: 2px 8px;
+  font-size: var(--text-11);
+  font-weight: 500;
+  line-height: 1.6;
+}
+
+.status-success {
+  border: 1px solid color-mix(in srgb, var(--success-text) 20%, transparent);
+  background: var(--success-bg);
+  color: var(--success-text);
+}
+
+.status-error {
+  border: 1px solid color-mix(in srgb, var(--danger-text) 20%, transparent);
+  background: var(--danger-bg);
+  color: var(--danger-text);
+}

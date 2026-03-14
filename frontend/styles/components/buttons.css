@@ -1,0 +1,38 @@
+/* === Button Components === */
+.button-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: var(--radius-full);
+  background: var(--accent);
+  color: white;
+  font-size: var(--text-base);
+  font-weight: 600;
+  padding: 8px 20px;
+  transition: background-color 150ms ease, transform 150ms ease;
+}
+
+.button-primary:hover {
+  background: var(--accent-hover);
+}
+
+.button-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--line);
+  background: transparent;
+  color: var(--foreground);
+  font-size: var(--text-base);
+  font-weight: 600;
+  padding: 8px 20px;
+  transition: border-color 150ms ease, color 150ms ease;
+}
+
+.button-secondary:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}

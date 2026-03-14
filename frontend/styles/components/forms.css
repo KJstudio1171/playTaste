@@ -1,0 +1,17 @@
+/* === Form Components === */
+.input-field {
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  color: var(--foreground);
+  padding: 8px 12px;
+  font-size: var(--text-base);
+  transition: border-color 150ms ease, box-shadow 150ms ease;
+}
+
+.input-field:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: var(--shadow-focus);
+}
