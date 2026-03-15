@@ -15,14 +15,20 @@ const sizeMap = {
   lg: { px: 80, text: "text-2xl" },
 } as const;
 
-export function Avatar({ src, name, size = "md", className = "" }: AvatarProps) {
+export function Avatar({
+  src,
+  name,
+  size = "md",
+  // 기본값으로 색상 지정 — callers can override by passing className
+  className = "bg-accent text-white",
+}: AvatarProps) {
   const [imgError, setImgError] = useState(false);
   const { px, text } = sizeMap[size];
   const initial = name.slice(0, 1);
 
-  // className으로 shape/color 오버라이드 가능 (Tailwind 클래스 후순위가 우선)
+  // 구조적 클래스만 base에 포함; 색상/모양은 className으로 완전 제어
   const base =
-    `inline-flex shrink-0 items-center justify-center rounded-full bg-accent font-bold text-white ${text} ${className}`.trim();
+    `inline-flex shrink-0 items-center justify-center rounded-full font-bold ${text} ${className}`.trim();
 
   if (src && !imgError) {
     return (
