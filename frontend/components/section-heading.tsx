@@ -1,5 +1,7 @@
 import Link from "next/link";
 
+import { Button } from "@/components/ui/button";
+
 interface SectionHeadingProps {
   eyebrow: string;
   title: string;
@@ -25,12 +27,9 @@ export function SectionHeading({
         ) : null}
       </div>
       {actionLabel && actionHref ? (
-        <Link
-          href={actionHref}
-          className="shrink-0 text-sm font-semibold text-accent transition hover:underline"
-        >
-          {actionLabel} →
-        </Link>
+        <Button asChild variant="link" size="sm" className="shrink-0">
+          <Link href={actionHref}>{actionLabel} →</Link>
+        </Button>
       ) : null}
     </div>
   );

@@ -3,6 +3,9 @@ import Link from "next/link";
 
 import { GameCard } from "@/components/game-card";
 import { SectionHeading } from "@/components/section-heading";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent } from "@/components/ui/card";
+import { Progress } from "@/components/ui/progress";
 import { fetchBackendJson } from "@/lib/api";
 import { formatDate, formatRating } from "@/lib/format";
 import type { GameCard as GameCardType, PaginatedResponse } from "@/lib/types";
@@ -32,10 +35,14 @@ export default async function Home() {
         <div className="grid gap-3 md:grid-cols-[2fr_1fr]">
           {/* Featured 카드 */}
           {featuredGame && (
-            <Link
-              href={`/games/${featuredGame.id}`}
-              className="group overflow-hidden rounded-xl border border-line bg-background transition hover:shadow-[var(--shadow-soft)]"
+            <Card
+              asChild
+              className="rounded-xl py-0 transition hover:shadow-[var(--shadow-soft)]"
             >
+              <Link
+                href={`/games/${featuredGame.id}`}
+                className="group overflow-hidden"
+              >
               <div className="relative h-[200px] w-full overflow-hidden bg-surface-muted">
                 <Image
                   src={featuredGame.cover_image_url ?? "https://placehold.co/1200x400/1f2937/f8fafc?text=Game"}
@@ -44,11 +51,11 @@ export default async function Home() {
                   sizes="(max-width: 768px) 100vw, 66vw"
                   className="object-cover transition duration-300 group-hover:scale-105"
                 />
-                <div className="absolute left-3 top-3 rounded-[4px] bg-accent px-2 py-0.5 text-[10px] font-bold uppercase tracking-[0.08em] text-white">
+                <Badge variant="accent" className="absolute left-3 top-3 rounded-full px-2 py-1 text-[10px] font-bold uppercase tracking-[0.08em]">
                   Editor&apos;s Pick
-                </div>
+                </Badge>
               </div>
-              <div className="p-4">
+              <CardContent className="p-4">
                 <h2 className="text-lg font-extrabold tracking-[-0.03em] text-foreground">{featuredGame.title}</h2>
                 <p className="mt-0.5 text-xs text-muted">
                   {featuredGame.developer ?? "개발사 정보 없음"} · {formatDate(featuredGame.release_date)}
@@ -58,17 +65,13 @@ export default async function Home() {
                     {formatRating(featuredGame.avg_rating)}
                   </span>
                   <div className="flex-1">
-                    <div className="h-1 overflow-hidden rounded-full bg-line">
-                      <div
-                        className="h-full rounded-full bg-accent"
-                        style={{ width: `${(featuredGame.avg_rating / 5) * 100}%` }}
-                      />
-                    </div>
+                    <Progress value={(featuredGame.avg_rating / 5) * 100} />
                     <p className="mt-1 text-xs text-subtle">리뷰 {featuredGame.review_count}개</p>
                   </div>
                 </div>
-              </div>
-            </Link>
+              </CardContent>
+              </Link>
+            </Card>
           )}
 
           {/* 소형 사이드 카드 */}
@@ -107,7 +110,7 @@ export default async function Home() {
           {rankings.items.slice(0, 5).map((game, index) => (
             <div key={game.id} className="relative">
               {index < 3 && (
-                <div className="absolute left-2 top-2 z-10 rounded-[4px] bg-foreground px-1.5 py-0.5 text-[10px] font-extrabold text-white">
+                <div className="absolute left-2 top-2 z-10 rounded-full bg-foreground px-2 py-1 text-[10px] font-extrabold text-white">
                   #{index + 1}
                 </div>
               )}

@@ -2,6 +2,10 @@
 
 import { useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { Search } from "lucide-react";
+
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 interface GlobalSearchProps {
   placeholder?: string;
@@ -52,29 +56,23 @@ function SearchForm({ initialQuery, placeholder, compact = false }: SearchFormPr
 
   return (
     <form onSubmit={handleSubmit} className="relative w-full">
-      <svg
+      <Search
         aria-hidden="true"
-        viewBox="0 0 24 24"
         className={`pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-muted ${compact ? "h-4 w-4" : "h-5 w-5"}`}
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.8"
-      >
-        <circle cx="11" cy="11" r="6.5" />
-        <path d="m16 16 4 4" strokeLinecap="round" />
-      </svg>
-      <input
+      />
+      <Input
         value={query}
         onChange={(event) => setQuery(event.target.value)}
         placeholder={placeholder}
-        className={`input-field rounded-full pl-11 pr-24 ${compact ? "py-2.5 text-sm" : "py-3 text-sm"}`}
+        className={`rounded-full pl-11 pr-24 ${compact ? "py-2.5 text-sm" : "py-3 text-sm"}`}
       />
-      <button
+      <Button
         type="submit"
-        className={`absolute right-1.5 top-1/2 -translate-y-1/2 rounded-full bg-accent px-3.5 font-semibold text-white transition hover:bg-accent-strong ${compact ? "py-1.5 text-xs" : "py-2 text-sm"}`}
+        size={compact ? "xs" : "sm"}
+        className={`absolute right-1.5 top-1/2 -translate-y-1/2 ${compact ? "h-7" : "h-8"}`}
       >
         검색
-      </button>
+      </Button>
     </form>
   );
 }

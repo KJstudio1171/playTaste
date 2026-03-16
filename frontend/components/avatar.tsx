@@ -1,6 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { cn } from "@/lib/utils";
+import {
+  Avatar as UiAvatar,
+  AvatarFallback,
+  AvatarImage,
+} from "@/components/ui/avatar";
 
 interface AvatarProps {
   src?: string;
@@ -10,42 +15,23 @@ interface AvatarProps {
 }
 
 const sizeMap = {
-  sm: { px: 24, text: "text-xs" },
-  md: { px: 40, text: "text-sm" },
-  lg: { px: 80, text: "text-2xl" },
+  sm: "sm",
+  md: "default",
+  lg: "lg",
 } as const;
 
 export function Avatar({
   src,
   name,
   size = "md",
-  // 기본값으로 색상 지정 — callers can override by passing className
-  className = "bg-accent text-white",
+  className,
 }: AvatarProps) {
-  const [imgError, setImgError] = useState(false);
-  const { px, text } = sizeMap[size];
-  const initial = name.slice(0, 1);
-
-  // 구조적 클래스만 base에 포함; 색상/모양은 className으로 완전 제어
-  const base =
-    `inline-flex shrink-0 items-center justify-center rounded-full font-bold ${text} ${className}`.trim();
-
-  if (src && !imgError) {
-    return (
-      // eslint-disable-next-line @next/next/no-img-element
-      <img
-        src={src}
-        alt={name}
-        onError={() => setImgError(true)}
-        className={`rounded-full object-cover ${className}`.trim()}
-        style={{ width: px, height: px }}
-      />
-    );
-  }
+  const initial = name.trim().slice(0, 1).toUpperCase() || "?";
 
   return (
-    <span className={base} style={{ width: px, height: px }}>
-      {initial}
-    </span>
+    <UiAvatar size={sizeMap[size]} className={className}>
+      {src ? <AvatarImage src={src} alt={name} /> : null}
+      <AvatarFallback className={cn(className)}>{initial}</AvatarFallback>
+    </UiAvatar>
   );
 }

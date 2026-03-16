@@ -1,5 +1,8 @@
 import Link from "next/link";
 
+import { cn } from "@/lib/utils";
+import { Button, buttonVariants } from "@/components/ui/button";
+
 interface PaginationProps {
   page: number;
   totalPages: number;
@@ -31,42 +34,39 @@ export function Pagination({ page, totalPages, baseUrl, params }: PaginationProp
     pageNumbers.push(n);
   });
 
-  const btnBase = "flex h-9 min-w-[36px] items-center justify-center rounded-lg border px-3 text-sm font-medium transition";
-  const btnActive = "border-accent bg-accent text-white";
-  const btnDefault = "border-line bg-background text-foreground hover:border-accent hover:text-accent";
-  const btnDisabled = "border-line bg-surface text-subtle cursor-not-allowed";
-
   return (
     <nav className="flex items-center gap-1" aria-label="페이지 네비게이션">
       {prev ? (
-        <Link href={buildPageUrl(baseUrl, prev, params)} className={`${btnBase} ${btnDefault}`}>
-          ←
-        </Link>
+        <Button asChild variant="secondary" size="icon-sm" aria-label="이전 페이지">
+          <Link href={buildPageUrl(baseUrl, prev, params)}>←</Link>
+        </Button>
       ) : (
-        <span className={`${btnBase} ${btnDisabled}`}>←</span>
+        <span className={cn(buttonVariants({ variant: "secondary", size: "icon-sm" }), "cursor-not-allowed opacity-50")}>←</span>
       )}
 
       {pageNumbers.map((n, i) =>
         n === "..." ? (
           <span key={`ellipsis-${i}`} className="px-1 text-subtle">…</span>
         ) : (
-          <Link
+          <Button
             key={n}
-            href={buildPageUrl(baseUrl, n, params)}
-            className={`${btnBase} ${n === page ? btnActive : btnDefault}`}
+            asChild
+            variant={n === page ? "default" : "secondary"}
+            size="icon-sm"
+            className="rounded-lg"
             aria-current={n === page ? "page" : undefined}
           >
-            {n}
-          </Link>
+            <Link href={buildPageUrl(baseUrl, n, params)}>{n}</Link>
+          </Button>
         )
       )}
 
       {next ? (
-        <Link href={buildPageUrl(baseUrl, next, params)} className={`${btnBase} ${btnDefault}`}>
-          →
-        </Link>
+        <Button asChild variant="secondary" size="icon-sm" aria-label="다음 페이지">
+          <Link href={buildPageUrl(baseUrl, next, params)}>→</Link>
+        </Button>
       ) : (
-        <span className={`${btnBase} ${btnDisabled}`}>→</span>
+        <span className={cn(buttonVariants({ variant: "secondary", size: "icon-sm" }), "cursor-not-allowed opacity-50")}>→</span>
       )}
     </nav>
   );

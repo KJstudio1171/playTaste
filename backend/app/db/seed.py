@@ -1,6 +1,4 @@
 from datetime import date
-from urllib.parse import quote_plus
-
 from sqlalchemy import select
 
 from app.db.session import SessionLocal
@@ -117,8 +115,8 @@ REVIEWS = [
 ]
 
 
-def build_cover_url(title: str) -> str:
-    return f"https://placehold.co/600x900/111827/f8fafc?text={quote_plus(title)}"
+def build_cover_url(slug: str) -> str:
+    return f"https://picsum.photos/seed/{slug}/600/900"
 
 
 def upsert_reference_data(db) -> tuple[dict[str, Genre], dict[str, Platform], dict[str, User]]:
@@ -171,7 +169,7 @@ def upsert_games(db, genres_by_slug: dict[str, Genre], platforms_by_slug: dict[s
         game.developer = payload["developer"]
         game.publisher = payload["publisher"]
         game.release_date = payload["release_date"]
-        game.cover_image_url = build_cover_url(payload["title"])
+        game.cover_image_url = build_cover_url(payload["slug"])
         game.genre_links = [GameGenre(genre=genres_by_slug[slug]) for slug in payload["genres"]]
         game.platform_links = [GamePlatform(platform=platforms_by_slug[slug]) for slug in payload["platforms"]]
         games_by_slug[payload["slug"]] = game

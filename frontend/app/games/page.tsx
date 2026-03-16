@@ -4,6 +4,8 @@ import { FilterButton } from "@/components/filter-button";
 import { GameCard } from "@/components/game-card";
 import { Pagination } from "@/components/pagination";
 import { SearchBox } from "@/components/search-box";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import { fetchBackendJson } from "@/lib/api";
 import type { GameCard as GameCardType, PaginatedResponse } from "@/lib/types";
 
@@ -62,7 +64,7 @@ export default async function GamesPage({ searchParams }: GamesPageProps) {
 
   return (
     <main className="space-y-6">
-      <section className="rounded-xl border border-line bg-background p-5 sm:p-6">
+      <Card className="rounded-[28px] p-5 sm:p-6">
         <div className="flex flex-col gap-6 xl:flex-row xl:items-end xl:justify-between">
           <div className="max-w-3xl">
             <p className="eyebrow">{isSearch ? "검색 결과" : "게임 카탈로그"}</p>
@@ -92,7 +94,7 @@ export default async function GamesPage({ searchParams }: GamesPageProps) {
 
         <div className="mt-6 grid gap-4 xl:grid-cols-[minmax(0,1fr)_280px]">
           <SearchBox initialQuery={query} />
-          <div className="rounded-[24px] bg-surface-muted/60 p-5">
+          <Card className="rounded-[24px] border-line bg-surface-muted/60 p-5 shadow-none">
             <p className="text-sm font-semibold text-foreground">
               {isSearch ? `${results.total}개의 검색 결과` : `총 ${results.total}개의 게임`}
             </p>
@@ -100,13 +102,13 @@ export default async function GamesPage({ searchParams }: GamesPageProps) {
               {isSearch ? "검색 결과는 관련도 기준으로 보여줘요." : "원하는 정렬을 선택해 흐름을 빠르게 바꿔볼 수 있어요."}
             </p>
             {isSearch ? (
-              <Link href={buildHref({ sort })} className="button-secondary mt-4 px-4 py-2 text-sm">
-                전체 목록으로 돌아가기
-              </Link>
+              <Button asChild variant="secondary" size="sm" className="mt-4">
+                <Link href={buildHref({ sort })}>전체 목록으로 돌아가기</Link>
+              </Button>
             ) : null}
-          </div>
+          </Card>
         </div>
-      </section>
+      </Card>
 
       {results.items.length > 0 ? (
         <section className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4">
@@ -115,18 +117,18 @@ export default async function GamesPage({ searchParams }: GamesPageProps) {
           ))}
         </section>
       ) : (
-        <section className="rounded-xl border border-line p-6">
+        <Card className="rounded-[28px] p-6">
           <p className="text-base font-semibold">검색 결과가 없어요.</p>
           <p className="mt-2 text-sm leading-7 text-muted">
             다른 제목을 시도하거나 개발사 이름으로 다시 찾아보세요. 예: Hades, Nintendo, Atlus
           </p>
-          <Link href="/games" className="button-secondary mt-5">
-            전체 목록 보기
-          </Link>
-        </section>
+          <Button asChild variant="secondary" className="mt-5">
+            <Link href="/games">전체 목록 보기</Link>
+          </Button>
+        </Card>
       )}
 
-      <div className="flex items-center justify-between rounded-xl border border-line p-4">
+      <Card className="flex flex-row flex-wrap items-center justify-between gap-3 rounded-[24px] p-4 shadow-none">
         <p className="text-sm text-muted">
           {results.page} / {totalPages} 페이지 · {results.total}개
         </p>
@@ -142,7 +144,7 @@ export default async function GamesPage({ searchParams }: GamesPageProps) {
             }).filter(([, v]) => v != null)
           ) as Record<string, string>}
         />
-      </div>
+      </Card>
     </main>
   );
 }

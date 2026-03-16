@@ -7,6 +7,7 @@ import { RatingWidget } from "@/components/rating-widget";
 import { ReviewEditor } from "@/components/review-editor";
 import { ReviewFeed } from "@/components/review-feed";
 import { SectionHeading } from "@/components/section-heading";
+import { Card } from "@/components/ui/card";
 import { fetchBackendResponse } from "@/lib/api";
 import { formatDate, formatRating } from "@/lib/format";
 import type { GameDetail } from "@/lib/types";
@@ -59,23 +60,23 @@ export default async function GameDetailPage({ params }: GameDetailPageProps) {
 
           {/* 스탯 타일 */}
           <div className="grid grid-cols-3 gap-3">
-            <div className="stat-tile rounded-lg p-3 text-center">
+            <Card className="rounded-lg border-line bg-surface p-3 text-center shadow-none">
               <p className="eyebrow">평균 평점</p>
               <p className="mt-1.5 text-2xl font-black text-accent">{formatRating(game.avg_rating)}</p>
               <div className="mt-1 flex justify-center">
                 <RatingStars value={Math.round(game.avg_rating)} size="sm" />
               </div>
-            </div>
-            <div className="stat-tile rounded-lg p-3 text-center">
+            </Card>
+            <Card className="rounded-lg border-line bg-surface p-3 text-center shadow-none">
               <p className="eyebrow">평가 수</p>
               <p className="mt-1.5 text-2xl font-black text-foreground">{game.rating_count}</p>
               <p className="mt-1 text-xs text-muted">명 참여</p>
-            </div>
-            <div className="stat-tile rounded-lg p-3 text-center">
+            </Card>
+            <Card className="rounded-lg border-line bg-surface p-3 text-center shadow-none">
               <p className="eyebrow">리뷰 수</p>
               <p className="mt-1.5 text-2xl font-black text-foreground">{game.review_count}</p>
               <p className="mt-1 text-xs text-muted">개 작성</p>
-            </div>
+            </Card>
           </div>
 
           {/* 메타 정보 */}
@@ -130,9 +131,9 @@ export default async function GameDetailPage({ params }: GameDetailPageProps) {
 
 function Meta({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-lg bg-surface-muted p-3">
+    <Card className="rounded-lg border-line bg-surface-muted p-3 shadow-none">
       <p className="eyebrow">{label}</p>
       <p className="mt-1 text-sm font-medium text-foreground">{value}</p>
-    </div>
+    </Card>
   );
 }

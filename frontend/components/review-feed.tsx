@@ -1,4 +1,6 @@
 import { Avatar } from "@/components/avatar";
+import { Badge } from "@/components/badge";
+import { Card } from "@/components/ui/card";
 import type { ReviewSummary } from "@/lib/types";
 
 interface ReviewFeedProps {
@@ -9,9 +11,9 @@ interface ReviewFeedProps {
 export function ReviewFeed({ reviews, highlightReviewId }: ReviewFeedProps) {
   if (reviews.length === 0) {
     return (
-      <div className="panel rounded-[28px] p-6 text-sm leading-7 text-muted">
+      <Card className="rounded-[28px] p-6 text-sm leading-7 text-muted">
         아직 등록된 리뷰가 없어요. 이 게임의 첫 인상을 남겨서 페이지 분위기를 만들어 보세요.
-      </div>
+      </Card>
     );
   }
 
@@ -21,9 +23,9 @@ export function ReviewFeed({ reviews, highlightReviewId }: ReviewFeedProps) {
         const highlighted = review.id === highlightReviewId;
 
         return (
-          <article
+          <Card
             key={review.id}
-            className={`panel rounded-[28px] p-6 ${highlighted ? "border-accent bg-[rgba(245,224,209,0.45)]" : ""}`}
+            className={`rounded-[28px] p-6 ${highlighted ? "border-accent-mid bg-accent-soft" : ""}`}
           >
             <div className="flex items-start justify-between gap-3">
               <div className="flex items-center gap-3">
@@ -36,7 +38,7 @@ export function ReviewFeed({ reviews, highlightReviewId }: ReviewFeedProps) {
                   <div className="flex flex-wrap items-center gap-2">
                     <p className="text-sm font-semibold">{review.user.display_name}</p>
                     {highlighted ? (
-                      <span className="rounded-full bg-accent px-2 py-1 text-[11px] font-semibold text-white">내 리뷰</span>
+                      <Badge variant="accent">내 리뷰</Badge>
                     ) : null}
                   </div>
                   <p className="text-xs text-muted">@{review.user.username}</p>
@@ -51,7 +53,7 @@ export function ReviewFeed({ reviews, highlightReviewId }: ReviewFeedProps) {
               </p>
             </div>
             <p className="mt-4 text-sm leading-7 text-foreground">{review.content}</p>
-          </article>
+          </Card>
         );
       })}
     </div>

@@ -2,6 +2,8 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { Badge } from "@/components/badge";
+import { Card } from "@/components/ui/card";
+import { Progress } from "@/components/ui/progress";
 import { fetchBackendJson } from "@/lib/api";
 import { formatDate, formatRating } from "@/lib/format";
 import type { GameCard, PaginatedResponse } from "@/lib/types";
@@ -21,7 +23,7 @@ export default async function RankingsPage() {
         </p>
       </div>
 
-      <div className="divide-y divide-line overflow-hidden rounded-xl border border-line">
+      <Card className="divide-y divide-line overflow-hidden rounded-[28px] py-0">
         {rankings.items.map((game, index) => {
           const isTop3 = index < 3;
           const fillPercent = (game.avg_rating / 5) * 100;
@@ -67,17 +69,12 @@ export default async function RankingsPage() {
                     </Badge>
                   ))}
                 </div>
-              </div>
+                </div>
 
               {/* 평점 바 + 숫자 */}
               <div className="hidden shrink-0 items-center gap-3 sm:flex">
                 <div className="w-[120px]">
-                  <div className="h-1 overflow-hidden rounded-full bg-line">
-                    <div
-                      className="h-full rounded-full bg-accent transition-all"
-                      style={{ width: `${fillPercent}%` }}
-                    />
-                  </div>
+                  <Progress value={fillPercent} />
                   <p className="mt-1 text-right text-xs text-muted">평가 {game.rating_count}개</p>
                 </div>
                 <span className="w-10 text-right text-base font-extrabold text-accent">
@@ -92,7 +89,7 @@ export default async function RankingsPage() {
             </Link>
           );
         })}
-      </div>
+      </Card>
     </main>
   );
 }

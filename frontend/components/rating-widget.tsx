@@ -4,6 +4,8 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 
 import { RatingStars } from "@/components/rating-stars";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Card } from "@/components/ui/card";
 
 interface RatingWidgetProps {
   gameId: number;
@@ -56,14 +58,14 @@ export function RatingWidget({ gameId, initialRating }: RatingWidgetProps) {
   }
 
   return (
-    <div className="panel-featured rounded-xl p-5 sm:p-6">
+    <Card className="rounded-[28px] border-accent-mid bg-accent-soft p-5 sm:p-6">
       <p className="eyebrow">내 별점</p>
       <h3 className="mt-2 text-2xl font-semibold">이 게임, 몇 점인가요?</h3>
       <p className="mt-2 text-sm leading-6 text-muted">
         별을 누르면 바로 저장돼요. 나중에 다시 바꿔도 괜찮아요.
       </p>
 
-      <div className="mt-5 bg-accent-soft rounded-lg p-4">
+      <div className="mt-5 rounded-2xl border border-accent-mid bg-white/70 p-4">
         <RatingStars value={selected} interactive pending={pending} onChange={handleRate} size="lg" />
         <p className="mt-3 text-sm font-semibold text-foreground">
           {selected ? `내 점수 ${selected}.0 / 5` : "아직 내 별점이 없어요."}
@@ -74,14 +76,10 @@ export function RatingWidget({ gameId, initialRating }: RatingWidgetProps) {
       </div>
 
       {feedback ? (
-        <p
-          className={`mt-4 rounded-2xl px-4 py-3 text-sm font-medium ${
-            feedback.tone === "success" ? "status-success" : "status-error"
-          }`}
-        >
-          {feedback.text}
-        </p>
+        <Alert variant={feedback.tone === "success" ? "success" : "destructive"} className="mt-4">
+          <AlertDescription>{feedback.text}</AlertDescription>
+        </Alert>
       ) : null}
-    </div>
+    </Card>
   );
 }

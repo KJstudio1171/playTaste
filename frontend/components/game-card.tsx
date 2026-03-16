@@ -3,6 +3,9 @@ import Link from "next/link";
 
 import { formatDate, formatRating } from "@/lib/format";
 import type { GameCard as GameCardType } from "@/lib/types";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent } from "@/components/ui/card";
+import { Progress } from "@/components/ui/progress";
 
 interface GameCardProps {
   game: GameCardType;
@@ -12,10 +15,15 @@ interface GameCardProps {
 export function GameCard({ game, variant = "default" }: GameCardProps) {
   if (variant === "compact") {
     return (
-      <Link
-        href={`/games/${game.id}`}
-        className="group flex h-full items-center gap-3 rounded-[10px] border border-line bg-surface p-0 transition hover:shadow-[var(--shadow-soft)] overflow-hidden"
+      <Card
+        asChild
+        size="sm"
+        className="rounded-[10px] border-line bg-surface py-0 transition hover:shadow-[var(--shadow-soft)]"
       >
+        <Link
+          href={`/games/${game.id}`}
+          className="group flex h-full items-center gap-3 overflow-hidden"
+        >
         <div className="relative h-[58px] w-[44px] shrink-0 bg-surface-muted">
           <Image
             src={game.cover_image_url ?? "https://placehold.co/600x900/1f2937/f8fafc?text=Game"}
@@ -32,17 +40,24 @@ export function GameCard({ game, variant = "default" }: GameCardProps) {
           </p>
         </div>
         <div className="shrink-0 pr-3 text-right">
-          <span className="text-sm font-extrabold text-accent">{formatRating(game.avg_rating)}</span>
+          <Badge variant="accent" className="px-2 py-0.5 text-[10px] font-semibold">
+            {formatRating(game.avg_rating)}
+          </Badge>
         </div>
-      </Link>
+        </Link>
+      </Card>
     );
   }
 
   return (
-    <Link
-      href={`/games/${game.id}`}
-      className="group flex h-full flex-col overflow-hidden rounded-[10px] border border-line bg-background transition hover:-translate-y-0.5 hover:shadow-[var(--shadow-soft)]"
+    <Card
+      asChild
+      className="h-full rounded-[10px] border-line py-0 transition hover:-translate-y-0.5 hover:shadow-[var(--shadow-soft)]"
     >
+      <Link
+        href={`/games/${game.id}`}
+        className="group flex h-full flex-col overflow-hidden"
+      >
       <div className="relative aspect-[3/4] overflow-hidden bg-surface-muted">
         <Image
           src={game.cover_image_url ?? "https://placehold.co/600x900/1f2937/f8fafc?text=Game"}
@@ -51,17 +66,27 @@ export function GameCard({ game, variant = "default" }: GameCardProps) {
           sizes="(max-width: 768px) 50vw, 20vw"
           className="object-cover transition duration-300 group-hover:scale-105"
         />
-        <div className="absolute bottom-2 right-2 rounded-[4px] bg-accent px-1.5 py-0.5 text-[10px] font-extrabold text-white">
+        <div className="absolute bottom-2 right-2">
           {formatRating(game.avg_rating)}
         </div>
       </div>
 
-      <div className="flex flex-1 flex-col gap-1 p-3">
+      <CardContent className="flex flex-1 flex-col gap-2 p-3">
+        <div className="flex items-start justify-between gap-2">
+          <Badge variant="accent" className="shrink-0 px-1.5 py-0 text-[10px] font-semibold">
+            {formatRating(game.avg_rating)}
+          </Badge>
+          {game.genres[0]?.name ? (
+            <Badge variant="default" className="max-w-[60%] truncate">
+              {game.genres[0].name}
+            </Badge>
+          ) : null}
+        </div>
         <h3 className="text-sm font-bold leading-snug text-foreground">{game.title}</h3>
-        <p className="text-xs text-subtle">
-          {game.genres[0]?.name ?? game.developer ?? ""}
-        </p>
-      </div>
-    </Link>
+        <p className="text-xs text-subtle">{game.genres[0]?.name ?? game.developer ?? ""}</p>
+        <Progress value={(game.avg_rating / 5) * 100} className="mt-auto" />
+      </CardContent>
+      </Link>
+    </Card>
   );
 }

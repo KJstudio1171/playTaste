@@ -1,6 +1,9 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 
+import { cn } from "@/lib/utils";
+import { Button, buttonVariants } from "@/components/ui/button";
+
 interface FilterButtonProps {
   active: boolean;
   children: ReactNode;
@@ -9,10 +12,16 @@ interface FilterButtonProps {
   onClick?: () => void; // button 모드 (클라이언트 전용)
 }
 
-const activeClass = "bg-accent text-white";
-const inactiveClass =
-  "border border-line text-foreground transition hover:border-accent hover:text-accent";
-const disabledClass = "border border-line text-foreground opacity-50 cursor-default";
+function getButtonClass(active: boolean, disabled?: boolean) {
+  return cn(
+    buttonVariants({
+      variant: active ? "default" : "secondary",
+      size: "sm",
+    }),
+    "h-9",
+    disabled && "cursor-default opacity-50"
+  );
+}
 
 export function FilterButton({
   active,
@@ -21,25 +30,21 @@ export function FilterButton({
   disabled,
   onClick,
 }: FilterButtonProps) {
-  const base = `rounded-full px-4 py-1.5 text-sm font-semibold ${
-    disabled ? disabledClass : active ? activeClass : inactiveClass
-  }`;
-
   if (disabled) {
-    return <span className={base}>{children}</span>;
+    return <span className={getButtonClass(active, true)}>{children}</span>;
   }
 
   if (href) {
     return (
-      <Link href={href} className={base}>
-        {children}
-      </Link>
+      <Button asChild variant={active ? "default" : "secondary"} size="sm" className="h-9">
+        <Link href={href}>{children}</Link>
+      </Button>
     );
   }
 
   return (
-    <button onClick={onClick} className={base}>
+    <Button type="button" onClick={onClick} variant={active ? "default" : "secondary"} size="sm" className="h-9">
       {children}
-    </button>
+    </Button>
   );
 }

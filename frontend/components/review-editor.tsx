@@ -2,8 +2,13 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { PencilLine, Trash2 } from "lucide-react";
 
 import type { ReviewSummary } from "@/lib/types";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Textarea } from "@/components/ui/textarea";
 
 interface ReviewEditorProps {
   gameId: number;
@@ -97,7 +102,7 @@ export function ReviewEditor({ gameId, initialReview }: ReviewEditorProps) {
     : null;
 
   return (
-    <div className="panel rounded-[30px] p-5 sm:p-6">
+    <Card className="rounded-[30px] p-5 sm:p-6">
       <div className="flex items-start justify-between gap-3">
         <div>
           <p className="eyebrow">내 리뷰</p>
@@ -108,17 +113,20 @@ export function ReviewEditor({ gameId, initialReview }: ReviewEditorProps) {
 
         {initialReview && !editing ? (
           <div className="flex gap-2">
-            <button type="button" onClick={() => setEditing(true)} className="button-secondary px-4 py-2 text-sm">
+            <Button type="button" onClick={() => setEditing(true)} variant="secondary" size="sm">
+              <PencilLine />
               수정하기
-            </button>
-            <button
+            </Button>
+            <Button
               type="button"
               onClick={deleteReview}
               disabled={pending}
-              className="rounded-full border border-line px-4 py-2 text-sm font-semibold text-danger-text transition hover:border-danger-text disabled:opacity-60"
+              variant="destructive"
+              size="sm"
             >
+              <Trash2 />
               삭제
-            </button>
+            </Button>
           </div>
         ) : null}
       </div>
@@ -126,7 +134,7 @@ export function ReviewEditor({ gameId, initialReview }: ReviewEditorProps) {
       {initialReview && !editing ? (
         <>
           <p className="mt-3 text-sm text-muted">마지막 수정 {updatedLabel}</p>
-          <div className="mt-4 rounded-[24px] bg-surface-muted/60 p-5">
+          <div className="mt-4 rounded-[24px] border border-line bg-surface-muted/60 p-5">
             <p className="text-sm leading-7 text-foreground">{initialReview.content}</p>
           </div>
         </>
@@ -135,17 +143,17 @@ export function ReviewEditor({ gameId, initialReview }: ReviewEditorProps) {
           <p className="mt-2 text-sm leading-6 text-muted">
             플레이 경험, 좋았던 점, 아쉬웠던 점을 간단히 적어 보세요.
           </p>
-          <textarea
+          <Textarea
             value={draft}
             onChange={(event) => setDraft(event.target.value)}
             placeholder="예: 전투 템포는 정말 좋았지만 후반부 반복감이 조금 아쉬웠어요."
-            className="input-field mt-4 min-h-44 rounded-[24px] px-4 py-4 text-sm leading-7 outline-none"
+            className="mt-4 min-h-44"
           />
           <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <p className="text-sm text-muted">최소 5자 이상 입력하면 저장할 수 있어요.</p>
             <div className="flex gap-2">
               {initialReview ? (
-                <button
+                <Button
                   type="button"
                   onClick={() => {
                     setDraft(initialReview.content);
@@ -153,28 +161,25 @@ export function ReviewEditor({ gameId, initialReview }: ReviewEditorProps) {
                     setFeedback(null);
                   }}
                   disabled={pending}
-                  className="button-secondary px-4 py-3 text-sm"
+                  variant="secondary"
+                  size="sm"
                 >
                   취소
-                </button>
+                </Button>
               ) : null}
-              <button type="button" onClick={saveReview} disabled={!canSave} className="button-primary disabled:opacity-50">
+              <Button type="button" onClick={saveReview} disabled={!canSave}>
                 {pending ? "저장 중..." : initialReview ? "리뷰 저장" : "리뷰 등록"}
-              </button>
+              </Button>
             </div>
           </div>
         </>
       )}
 
       {feedback ? (
-        <p
-          className={`mt-4 rounded-2xl px-4 py-3 text-sm font-medium ${
-            feedback.tone === "success" ? "status-success" : "status-error"
-          }`}
-        >
-          {feedback.text}
-        </p>
+        <Alert variant={feedback.tone === "success" ? "success" : "destructive"} className="mt-4">
+          <AlertDescription>{feedback.text}</AlertDescription>
+        </Alert>
       ) : null}
-    </div>
+    </Card>
   );
 }

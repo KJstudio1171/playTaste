@@ -7,6 +7,7 @@ import { usePathname } from "next/navigation";
 import { Avatar } from "@/components/avatar";
 import { Tabs, type Tab } from "@/components/tabs";
 import { GlobalSearch } from "@/components/global-search";
+import { Button } from "@/components/ui/button";
 import type { UserSummary } from "@/lib/types";
 
 interface SiteHeaderProps {
@@ -37,17 +38,16 @@ export function SiteHeader({ currentUser }: SiteHeaderProps) {
         </div>
 
         {currentUser ? (
-          <Link
-            href={`/users/${currentUser.id}`}
-            className="flex shrink-0 items-center gap-2 rounded-full border border-line px-3 py-1.5 text-sm font-semibold transition hover:border-accent hover:text-accent"
-          >
-            <Avatar name={currentUser.display_name} size="sm" />
-            <span className="hidden sm:inline">{currentUser.display_name}</span>
-          </Link>
+          <Button asChild variant="secondary" size="sm" className="gap-2">
+            <Link href={`/users/${currentUser.id}`}>
+              <Avatar name={currentUser.display_name} size="sm" />
+              <span className="hidden sm:inline">{currentUser.display_name}</span>
+            </Link>
+          </Button>
         ) : (
-          <Link href="/games" className="button-secondary shrink-0 py-1.5 text-sm">
-            게임 둘러보기
-          </Link>
+          <Button asChild variant="secondary" size="sm" className="shrink-0">
+            <Link href="/games">게임 둘러보기</Link>
+          </Button>
         )}
       </div>
 

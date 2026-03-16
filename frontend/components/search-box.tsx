@@ -2,6 +2,10 @@
 
 import { startTransition, useDeferredValue, useEffect, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { Search, X } from "lucide-react";
+
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 interface SearchBoxProps {
   initialQuery: string;
@@ -51,32 +55,25 @@ export function SearchBox({ initialQuery }: SearchBoxProps) {
         게임 검색
       </label>
       <div className="relative">
-        <svg
-          aria-hidden="true"
-          viewBox="0 0 24 24"
-          className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-muted"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.8"
-        >
-          <circle cx="11" cy="11" r="6.5" />
-          <path d="m16 16 4 4" strokeLinecap="round" />
-        </svg>
-        <input
+        <Search aria-hidden="true" className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted" />
+        <Input
           id="catalog-search"
           value={query}
           onChange={(event) => setQuery(event.target.value)}
           placeholder="예: Elden Ring, Atlus, Nintendo"
-          className="input-field rounded-full py-3 pl-11 pr-12 text-sm"
+          className="rounded-full py-3 pl-11 pr-12"
         />
         {query ? (
-          <button
+          <Button
             type="button"
             onClick={() => setQuery("")}
-            className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full px-2 py-1 text-xs font-semibold text-muted transition hover:text-foreground"
+            variant="ghost"
+            size="icon-xs"
+            className="absolute right-2 top-1/2 -translate-y-1/2 rounded-full text-muted hover:text-foreground"
+            aria-label="검색어 지우기"
           >
-            지우기
-          </button>
+            <X />
+          </Button>
         ) : null}
       </div>
       <p className="text-sm leading-6 text-muted">제목, 개발사, 퍼블리셔 이름으로 바로 찾을 수 있어요.</p>
